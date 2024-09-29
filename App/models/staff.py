@@ -4,7 +4,7 @@ from .user import User
 
 class Staff(User):
     # No __tablename__ here in single table inheritance (STI); we inherit from the base table (i.e., User)
-    is_admin = db.Column(db.Boolean, nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
     reviews = db.relationship(
         "Review", back_populates="writer", lazy=True, cascade="all, delete-orphan")
 

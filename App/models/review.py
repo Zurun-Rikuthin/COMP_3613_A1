@@ -4,7 +4,7 @@ from App.database import db
 class Review(db.Model):
     __tablename__ = "review"
     id = db.Column(db.Integer, primary_key=True)
-    staff_id = db.Column(db.Integer, db.ForeignKey("staff.id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey(
         "student.id"), nullable=False)
     content = db.Column(db.String(4096), nullable=False)
