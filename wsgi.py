@@ -11,7 +11,7 @@ from App.main import create_app
 from App.controllers.initialize import initialize
 from App.controllers.review import (create_review, get_review, get_reviews_by_staff_id,
                                     get_reviews_by_student_id, get_all_reviews, get_all_reviews_json, update_review)
-from App.controllers.staff import (create_staff, get_staff, get_all_normal_staff,
+from App.controllers.staff import (create_staff, get_staff, get_all_staff, get_all_staff_json, get_all_normal_staff,
                                    get_all_admin_staff, get_all_normal_staff_json, get_all_admin_staff_json, update_staff)
 from App.controllers.student import (create_student, get_student, get_students_by_first_name,
                                      get_students_by_last_name, get_all_students, get_all_students_json, update_student)
@@ -95,6 +95,15 @@ def create_staff_command(username, password, is_admin):
         print(f'Staff member {username} created!')
 
 
+@ staff_cli.command("list", help="Lists staff members in the database")
+@ click.option("--json", is_flag=True, help="Changes output format from a tuple string to JSON")
+def list_staff_command(json):
+    if json:
+        print(get_all_staff_json())
+    else:
+        print(get_all_staff())
+
+
 app.cli.add_command(staff_cli)
 
 '''
@@ -104,7 +113,7 @@ Student Commands
 student_cli = AppGroup("student", help="Student object command")
 
 
-@ staff_cli.command("create", help="Creates a student data object")
+@ student_cli.command("create", help="Creates a student data object")
 @ click.argument("firstname", default="Jane")
 @ click.argument("lastname", default="Doe")
 def create_staff_command(firstname, lastname):
@@ -116,6 +125,15 @@ def create_staff_command(firstname, lastname):
         print(f"Database error: {e}")
     else:
         print(f'Student {firstname} {lastname} created!')
+
+
+@ student_cli.command("list", help="Lists students in the database")
+@ click.option("--json", is_flag=True, help="Changes output format from a tuple string to JSON")
+def list_student_command(json):
+    if json:
+        print(get_all_students_json())
+    else:
+        print(get_all_students())
 
 
 app.cli.add_command(student_cli)
@@ -135,7 +153,7 @@ def create_review_command(staff_id, student_id, content):
     content_str = " ".join(content)
 
     try:
-        create_review(staff_id, student_id, content)
+        create_review(staff_id, student_id, content_str)
     except ValueError as e:
         print(f"Error: {e}")
     except IntegrityError as e:
@@ -145,7 +163,16 @@ def create_review_command(staff_id, student_id, content):
             f'Review by staff with id {staff_id} for student with id {student_id} created!')
 
 
-app.cli.add_command(staff_cli)
+@ student_cli.command("list", help="Lists reviews in the database")
+@ click.option("--json", is_flag=True, help="Changes output format from a tuple string to JSON")
+def list_review_command(json):
+    if json:
+        print(get_all_reviews_json())
+    else:
+        print(get_all_reviews())
+
+
+app.cli.add_command(review_cli)
 
 
 '''

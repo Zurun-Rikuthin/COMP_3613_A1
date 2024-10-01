@@ -6,21 +6,39 @@ from sqlalchemy.exc import IntegrityError
 
 def create_staff(username, password, is_admin=False):
     new_staff = Staff(username=username, password=password, is_admin=is_admin)
-    db.session.add(new_staff)
-    db.session.commit()
-    return new_staff
+
+    try:
+        db.session.add(new_staff)
+        db.session.commit()
+    except IntegrityError as e:
+        db.session.rollback()
+        raise IntegrityError(e)
+    else:
+        return new_staff
 
 
-def get_staff(id):
+def get_staff():
     return Staff.query.filter(Staff.id == id, or_(Staff.type == "staff", Staff.type == "admin")).first()
 
 
+def get_all_staff():
+    return Staff.query.filter(or_(Staff.type == "staff", Staff.type == "admin")).all()
+
+
 def get_all_normal_staff(id):
-    return Staff.query.filter_by(id=id, type="staff").all()
+    return Staff.query.filter_by(type="staff").all()
 
 
 def get_all_admin_staff(id):
-    return Staff.query.filter_by(id=id, type="admin").all()
+    return Staff.query.filter_by(type="admin").all()
+
+
+def get_all_staff_json():
+    staff_members = get_all_staff()
+    if not staff_members:
+        return []
+    staff_members = [staff_member.get_json() for staff_member in staff_members]
+    return staff_members
 
 
 def get_all_normal_staff_json():
