@@ -191,3 +191,91 @@ If you are running into errors in gitpod when updateding your github actions fil
 ## Database Issues
 
 If you are adding models you may need to migrate the database with the commands given in the previous database migration section. Alternateively you can delete you database file.
+
+
+# API Specification
+## init
+### init
+```bash
+flask init
+```
+* Creates and initializes the database
+
+## user
+### create
+```bash
+flask user create <username> <password>
+```
+* Creates a new User account class record.
+  * Base class that handles basic account details (username, password, logging 
+in, etc.)
+* Requires a username and password be provided.
+* Does not accept duplicate usernames.
+
+### list
+```bash
+flask user list -–json
+```
+* Lists all users within the database
+* Accepts the optional flag “--json" which, when provided changes the output format 
+from the default tuple string to JSON.
+
+## staff
+### create
+```bash
+flask staff create <username> <password> -–is-admin
+```
+* Creates a new Staff class record which subclasses User and (in future) handles
+method permissions.
+* Accepts the optional flag “--is-admin”, which changes the staff type from the 
+default “staff” (i.e., normal staff) to type “admin”.
+  * In future, this will be used to segregate more powerful permissions from 
+lower-level staff users.
+
+### list
+```bash
+flask staff list -–json
+```
+* Lists all staff members (normal and admin) within the database
+* Accepts the optional flag “--json" which, when provided changes the output format 
+from the default tuple string to JSON.
+
+## student
+### create
+```bash
+flask student create <first_name> <last_name>
+```
+* Creates a new Student data class record.
+  * Basic class that (for now) stores only student name
+* Requires a first_name and last_name be provided.
+* Accepts duplicate usernames (differentiated by unique ID).
+
+### list
+```bash
+flask student list -–json
+```
+* Lists all students within the database
+* Accepts the optional flag “--json" which, when provided changes the output format 
+from the default tuple string to JSON.
+
+## review
+### create
+```bash
+flask review create <staff_id> <student_id> <content>
+```
+* Creates a new Review data class record.
+  * Did not have time to add the creation date due to other assignments.
+* Requires the staff_id of the review’s writer, the student_id of the reviewee, and
+content string of the review be provided.
+  * Content contains any strings (spaces included) after the student_id, no 
+encapsulating quotation marks or other syntax necessary (will concatenate 
+them into one string automatically).
+* Accepts multiple reviews by the same staffer about the same student.
+
+### list
+```bash
+flask review list -–json
+```
+* Lists all reviews within the database
+* Accepts the optional flag “--json" which, when provided changes the output format 
+from the default tuple string to JSON
