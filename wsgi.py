@@ -163,7 +163,7 @@ def create_review_command(staff_id, student_id, content):
             f'Review by staff with id {staff_id} for student with id {student_id} created!')
 
 
-@ student_cli.command("list", help="Lists reviews in the database")
+@ review_cli.command("list", help="Lists reviews in the database")
 @ click.option("--json", is_flag=True, help="Changes output format from a tuple string to JSON")
 def list_review_command(json):
     if json:
